@@ -12,7 +12,7 @@ Final SRS for Capstone Project (Kelompok 1, 22D, SAPA for Bimbel Asentra), due 1
 - 2026-11-17: writing profile v1.3 (Drive `Cekula/_writing-profile/writing-style.md`): APA 7 is the default citation style when a template allows a choice.
 
 ## In progress
-- Rev 3 is built in the session scratchpad; copy it over the Drive docx/pdf once Word has closed the file. Lampiran B MoM (26 Sep 2026) was reconstructed from the project plan; Yordan should confirm it with Greta.
+- Rev 3 is in Drive (docx + pdf, 17 Nov 03.07). Lampiran B MoM (26 Sep 2026) was reconstructed from the project plan; Yordan should confirm it with Greta.
 
 ## Next
 1. After any edit, rebuild: `python -I doc-srs/srs/build_srs.py`, then `powershell -ExecutionPolicy Bypass -File doc-srs/srs/update_word.ps1 "<docx path>"`.

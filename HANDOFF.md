@@ -4,16 +4,17 @@
 Final SRS for Capstone Project (Kelompok 1, 22D, SAPA for Bimbel Asentra), due 17 Nov 2026 at 20.00. Rebuilt from Rifqi's v1.0 draft as v1.1: Laravel stack, all diagrams in Visual Paradigm, prose in Agung's writing style, APA 7.
 
 ## Done (newest first)
+- 2026-11-17 (rev 2): NIDN blank; interview 26 Sep 2026 with MoM tables in Lampiran B; Heroicons in Tabel 5.1; AD/SD-01..12 all in Bab IV (Lampiran D removed); every picture inside a bordered 1x1 table like the template.
 - 2026-11-17: SRS v1.1 built: `doc-srs/srs/isi_srs.py` (content), `build_srs.py` (fills P07 template), `update_word.ps1` (Word refreshes TOC/lists, exports PDF). Output goes to Drive, not the repo: `dev/cekula/capstone-project/SRS_SAPA_Kelompok1_v1.1.docx` + `.pdf` (87 pages, 31 tables, 43 figures).
 - 2026-11-17: identity data (names, NIM, dosen, NIDN, output path) lives in Drive `dev/cekula/capstone-project/srs-identitas.json` because this repo is PUBLIC.
 - 2026-11-17: VP generator runs on Windows: `doc-srs/diagram/generator/run_win.sh [all|srs|uc|cd|sd|ad]`. Plugin extended (deployment nodes/components/artifacts, `<<table>>` classes with PK/FK, `rel` 1 : N links, class stereotypes, activity object flow). New diagrams: deployment (layered architecture), ERD part 1/2, sitemap, Scrum cycle; class diagram split in 2. Terms fixed in all diagrams: Dasbor→Dashboard, kata sandi→password, kueri→query.
 - 2026-11-17: writing profile v1.3 (Drive `Cekula/_writing-profile/writing-style.md`): APA 7 is the default citation style when a template allows a choice.
 
 ## In progress
-- Waiting on Agung's review of the placeholders (yellow `[ISI: ...]` in the docx): NIDN dosen, tanggal wawancara, notulen/foto (Lampiran B), set ikon (Tabel 5.1).
+- None. NIDN is deliberately blank on the approval page (fill by hand). Lampiran B MoM (26 Sep 2026) was reconstructed from the project plan; Yordan should confirm it with Greta (Lampiran C no. 2).
 
 ## Next
-1. Fill the four `[ISI]` items: NIDN in `srs-identitas.json`; the rest in `doc-srs/srs/isi_srs.py`. Rebuild: `python -I doc-srs/srs/build_srs.py`, then `powershell -ExecutionPolicy Bypass -File doc-srs/srs/update_word.ps1 "<docx path>"`.
+1. After any edit, rebuild: `python -I doc-srs/srs/build_srs.py`, then `powershell -ExecutionPolicy Bypass -File doc-srs/srs/update_word.ps1 "<docx path>"`.
 2. Share v1.1 with the group (Rifqi's v1.0 wording was replaced) and submit before 20.00.
 3. Sprint 1 follow-up (Lampiran C no. 4): team migrations differ from the ERD (no kontak/percakapan tables; prospek stores nama/nomor_telepon directly).
 

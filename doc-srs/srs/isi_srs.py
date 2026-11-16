@@ -167,7 +167,7 @@ add("ul", [
     "Perencanaan Sprint Scrum SAPA (Product Backlog, Sprint Backlog, Sprint Planning, serta Tim dan Peran), 26 Oktober "
     "2026.",
     "SRS SAPA versi 1.0, 16 November 2026.",
-    "Hasil wawancara dengan pemilik Bimbingan Belajar Asentra (Greta), [ISI: tanggal wawancara].",
+    "Hasil wawancara dengan pemilik Bimbingan Belajar Asentra (Greta), 26 September 2026 (Lampiran B).",
     "IEEE Std 830-1998 (IEEE, 1998) dan ISO/IEC/IEEE 29148:2018 (ISO/IEC/IEEE, 2018).",
     "The Scrum Guide (Schwaber & Sutherland, 2020).",
     "Undang-Undang Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi (Republik Indonesia, 2022).",
@@ -175,12 +175,12 @@ add("ul", [
 add("p", "Sumber pustaka ditulis dengan format APA edisi ketujuh dan dicantumkan lengkap pada Daftar Pustaka.")
 
 add("h2", "1.8 Sistematika Dokumen")
-add("p", "Dokumen ini terdiri atas enam bab dan empat lampiran. Bab I berisi pendahuluan. Bab II memberikan gambaran "
+add("p", "Dokumen ini terdiri atas enam bab dan tiga lampiran. Bab I berisi pendahuluan. Bab II memberikan gambaran "
          "umum sistem. Bab III merinci kebutuhan fungsional, kebutuhan non-fungsional, antarmuka eksternal, dan "
-         "kebutuhan data. Bab IV menyajikan model analisis berupa arsitektur, diagram UML, dan ERD. Bab V berisi "
-         "rancangan antarmuka, dan Bab VI menjelaskan metode pengembangan Scrum. Lampiran A memuat matriks "
-         "keterlacakan, Lampiran B hasil requirement gathering, Lampiran C daftar hal yang belum ditentukan, dan "
-         "Lampiran D diagram aktivitas serta sequence untuk use case lainnya.")
+         "kebutuhan data. Bab IV menyajikan model analisis berupa arsitektur, diagram UML untuk kedua belas use case, "
+         "dan ERD. Bab V berisi rancangan antarmuka, dan Bab VI menjelaskan metode pengembangan Scrum. Lampiran A "
+         "memuat matriks keterlacakan, Lampiran B hasil requirement gathering dalam format notulen rapat, dan Lampiran C "
+         "daftar hal yang belum ditentukan.")
 
 # ====================================================================== BAB II
 add("h1", "BAB II", "DESKRIPSI UMUM SISTEM", "2")
@@ -679,34 +679,60 @@ add("table", "uc", "Daftar Use Case", ["Nomor", "Use case", "Aktor", "Kebutuhan"
 add("h2", "4.3 Diagram Aktivitas")
 add("p", "Activity diagram diturunkan dari rincian kebutuhan fungsional pada Bab III. Swimlane kiri memuat aktivitas "
          "aktor dan swimlane kanan memuat aktivitas sistem, sedangkan percabangan menggambarkan alur alternatif dan "
-         "kondisi galat. Bagian ini memuat empat proses utama; activity diagram untuk delapan use case lainnya "
-         "terdapat pada Lampiran D.")
-for i in range(1, 5):
-    n, nama = UC[i - 1][0], UC[i - 1][1]
-    add("fig", f"ad{i:02d}", f"Activity Diagram {nama} (AD-{i:02d})", PNG + f"AD-{i:02d} - {nama}.png",
-        {1: "Activity diagram Login menunjukkan validasi kredensial, penolakan akun nonaktif, dan pengalihan ke halaman "
-            "awal sesuai role.",
-         2: "Activity diagram Mengirim Pesan WhatsApp menunjukkan pembuatan kontak baru dan percabangan antara "
-            "percakapan yang ditangani AI dan yang ditangani agen.",
-         3: "Activity diagram Menjawab Pesan Otomatis dengan AI menunjukkan pencarian artikel, mode aturan bawaan saat "
-            "penyedia AI gagal, eskalasi, dan penilaian anti-ban.",
-         4: "Activity diagram Mengelola Percakapan menunjukkan pemeriksaan akses nomor, ambil alih oleh agen, dan "
-            "penilaian anti-ban sebelum balasan dikirim."}[i])
+         "kondisi galat. Activity diagram disusun untuk kedua belas use case pada {tab:uc}.")
+AD_KET = {
+    1: "Activity diagram Login menunjukkan validasi kredensial, penolakan akun nonaktif, dan pengalihan ke halaman "
+       "awal sesuai role.",
+    2: "Activity diagram Mengirim Pesan WhatsApp menunjukkan pembuatan kontak baru dan percabangan antara percakapan "
+       "yang ditangani AI dan yang ditangani agen.",
+    3: "Activity diagram Menjawab Pesan Otomatis dengan AI menunjukkan pencarian artikel, mode aturan bawaan saat "
+       "penyedia AI gagal, eskalasi, dan penilaian anti-ban.",
+    4: "Activity diagram Mengelola Percakapan menunjukkan pemeriksaan akses nomor, ambil alih oleh agen, dan penilaian "
+       "anti-ban sebelum balasan dikirim.",
+    5: "Activity diagram Mengelola Prospek menunjukkan penolakan catatan kosong dan penambahan hitungan konversi saat "
+       "prospek dipindah ke tahap daftar.",
+    6: "Activity diagram Mengelola Kontak Pelanggan menunjukkan pencarian kontak, kondisi kontak tidak ditemukan, dan "
+       "validasi data sebelum disimpan.",
+    7: "Activity diagram Melihat Dashboard Pemantauan menunjukkan pengambilan metrik harian, penerapan filter nomor dan "
+       "periode, serta kondisi tanpa data.",
+    8: "Activity diagram Mengelola Nomor WhatsApp menunjukkan pembuatan kode QR, pembuatan ulang QR yang kedaluwarsa, "
+       "dan pencatatan penautan gagal di Pusat Risiko.",
+    9: "Activity diagram Mengelola Basis Pengetahuan menunjukkan validasi judul dan isi, lalu pengindeksan ulang FTS5 "
+       "setelah artikel disimpan.",
+    10: "Activity diagram Mengatur AI dan Anti-ban menunjukkan validasi nilai batas, uji koneksi penyedia AI, dan "
+        "enkripsi kunci API sebelum pengaturan disimpan.",
+    11: "Activity diagram Mengelola Tim dan Hak Akses menunjukkan penolakan email yang sudah terdaftar dan penyimpanan "
+        "akses per nomor.",
+    12: "Activity diagram Melihat Log Audit menunjukkan penerapan filter pelaku, aksi, dan tanggal serta kondisi tanpa "
+        "hasil.",
+}
+for i in range(1, 13):
+    nama = UC[i - 1][1]
+    add("fig", f"ad{i:02d}", f"Activity Diagram {nama} (AD-{i:02d})", PNG + f"AD-{i:02d} - {nama}.png", AD_KET[i])
 
 add("h2", "4.4 Diagram Sequence")
 add("p", "Sequence diagram memuat aktor, objek antarmuka (View), pengendali (Cont), dan entitas (Ent) beserta urutan "
-         "pesan bernomor sesuai alur normal. Empat skenario utama ditampilkan di sini, dan sequence diagram untuk use "
-         "case lainnya terdapat pada Lampiran D.")
-for i in range(1, 5):
+         "pesan bernomor sesuai alur normal. Sequence diagram disusun untuk kedua belas use case.")
+SD_KET = {
+    1: "Cont:Login memeriksa data pengguna, memverifikasi password, mengambil akses nomor, lalu mencatat log audit.",
+    2: "WhatsAppGateway berperan sebagai objek antarmuka yang meneruskan pesan pelanggan ke Cont:Percakapan, lalu "
+       "Cont:AIEngine menyiapkan balasan.",
+    3: "Cont:AIEngine mencari artikel, meminta penyedia AI menyusun jawaban, menghitung keyakinan, lalu meneruskan "
+       "jawaban ke Cont:AntiBan sebelum dikirim.",
+    4: "Agen mengambil alih percakapan, dan Cont:Percakapan menghentikan AI sebelum balasan agen dinilai mesin anti-ban.",
+    5: "Cont:Prospek memuat prospek per tahap, menyimpan perubahan tahap dan aktivitas, lalu menghitung ulang skor.",
+    6: "Cont:Kontak mencari kontak berdasarkan kata kunci dan menyimpan perubahan data setelah validasi.",
+    7: "Cont:Dashboard mengambil metrik harian dan status nomor, lalu menghitung ulang metrik saat filter diubah.",
+    8: "Cont:NomorWA meminta sesi baru, menampilkan kode QR, lalu menyimpan status tersambung setelah QR dipindai.",
+    9: "Cont:BasisPengetahuan menyimpan artikel, mengindeks ulang FTS5, dan menjalankan uji pencarian.",
+    10: "Cont:PengaturanAI memvalidasi nilai, menguji kunci API ke penyedia AI, lalu menyimpan kunci dalam bentuk "
+        "terenkripsi.",
+    11: "Cont:TimAkses menyimpan pengguna baru dan matriks akses per nomor, lalu mencatat log audit.",
+    12: "Cont:LogAudit mengambil log terbaru dan menampilkan hasil sesuai filter pelaku, aksi, dan tanggal.",
+}
+for i in range(1, 13):
     nama = UC[i - 1][1]
-    add("fig", f"sd{i:02d}", f"Sequence Diagram {nama} (SD-{i:02d})", PNG + f"SD-{i:02d} - {nama}.png",
-        {1: "Cont:Login memeriksa data pengguna, memverifikasi password, mengambil akses nomor, lalu mencatat log audit.",
-         2: "WhatsAppGateway berperan sebagai objek antarmuka yang meneruskan pesan pelanggan ke Cont:Percakapan, lalu "
-            "Cont:AIEngine menyiapkan balasan.",
-         3: "Cont:AIEngine mencari artikel, meminta penyedia AI menyusun jawaban, menghitung keyakinan, lalu meneruskan "
-            "jawaban ke Cont:AntiBan sebelum dikirim.",
-         4: "Agen mengambil alih percakapan, dan Cont:Percakapan menghentikan AI sebelum balasan agen dinilai mesin "
-            "anti-ban."}[i])
+    add("fig", f"sd{i:02d}", f"Sequence Diagram {nama} (SD-{i:02d})", PNG + f"SD-{i:02d} - {nama}.png", SD_KET[i])
 
 add("h2", "4.5 Diagram Kelas (Class Diagram)")
 add("p", "Class diagram disusun dengan tata letak Model-View-Controller (MVC) yang sejalan dengan struktur Laravel. Kolom "
@@ -759,7 +785,8 @@ add("table", "gaya", "Panduan Gaya Antarmuka", ["Elemen", "Ketentuan"], [
     ["Warna status", "#15803D (tersambung atau berhasil) dan #B45309 pada latar #FFFBEB (peringatan)"],
     ["Jenis huruf", "Inter; judul tebal dan isi reguler"],
     ["Komponen", "Menu samping tetap, kartu putih bertepi tipis dengan sudut membulat, lencana skor dan status berwarna"],
-    ["Ikon", "[ISI: set ikon final, misalnya Heroicons atau Lucide]"],
+    ["Ikon", "Heroicons versi 2: gaya outline 24 piksel untuk menu samping dan gaya solid 20 piksel untuk tombol dan "
+     "lencana; warna mengikuti teks atau warna utama"],
     ["Ukuran rancangan", "Desktop 1440 × 900 piksel; tata letak menyesuaikan layar yang lebih kecil"],
 ], [3.5, 11.5])
 add("h2", "5.3 Rancangan Halaman")
@@ -971,7 +998,7 @@ lamp("table", "mitra", "Profil Mitra dan Hasil Requirement Gathering", ["Aspek",
     ["Jenjang", "Pra-sekolah, SD, SMP, dan SMA"],
     ["Kanal layanan saat ini", "Lebih dari satu nomor WhatsApp, yaitu nomor admin dan nomor sales"],
     ["Narasumber", "Greta (Owner)"],
-    ["Tanggal wawancara", "[ISI: tanggal wawancara]"],
+    ["Tanggal wawancara", "Sabtu, 26 September 2026; data profil dikonfirmasi tertulis pada 9 Oktober 2026"],
     ["Kondisi sebelum sistem", "Pertanyaan dijawab manual dari ponsel masing-masing; percakapan terpisah per perangkat; "
      "data calon siswa tidak tercatat; tidak ada pemantauan per nomor"],
     ["Kebutuhan utama", "Kotak masuk terpadu, jawaban otomatis dari katalog resmi, pencatatan calon siswa, hak akses per "
@@ -979,7 +1006,46 @@ lamp("table", "mitra", "Profil Mitra dan Hasil Requirement Gathering", ["Aspek",
     ["Data yang diolah", "Katalog program, basis pengetahuan (FAQ), percakapan WhatsApp, data calon siswa, pengguna dan "
      "nomor WhatsApp, metrik harian per nomor, dan log audit"],
 ], [4.0, 11.0])
-lamp("p", "Notulen wawancara dan dokumentasi kegiatan: [ISI: notulen wawancara dan foto kegiatan bersama mitra].")
+lamp("p", "Requirement gathering dilakukan melalui wawancara daring dengan pemilik Asentra. Informasi rapat dicatat pada "
+          "{tab:momrapat}, dan hasil pembahasan beserta tindak lanjutnya dicatat dalam format notulen rapat (minutes of "
+          "meeting) pada {tab:mom}.")
+lamp("table", "momrapat", "Informasi Rapat Requirement Gathering", ["Aspek", "Keterangan"], [
+    ["Kegiatan", "Wawancara requirement gathering sistem SAPA"],
+    ["Hari, tanggal", "Sabtu, 26 September 2026"],
+    ["Waktu", "10.00–11.30 WIB"],
+    ["Tempat", "Daring melalui Google Meet"],
+    ["Narasumber", "Greta (Owner, Bimbingan Belajar Asentra)"],
+    ["Peserta", "Kelompok 1: Yordan (Product Owner, pengusul proyek), Rifqi, Isnaini, Agung, dan Enrico"],
+    ["Notulis", "Agung"],
+    ["Agenda", "1. Profil dan layanan Asentra\n2. Alur layanan calon siswa melalui WhatsApp\n3. Masalah yang dihadapi "
+     "admin dan sales\n4. Kebutuhan sistem dan batasan rilis\n5. Keterlibatan mitra selama pengembangan"],
+], [3.5, 11.5])
+lamp("table", "mom", "Notulen Hasil Pembahasan Requirement Gathering", ["No", "Topik", "Hasil pembahasan",
+                                                                         "Tindak lanjut", "PIC"], [
+    ["1", "Profil Asentra", "Asentra berdiri pada 2024 dan melayani 128 siswa dari jenjang pra-sekolah sampai SMA dengan "
+     "24 pengajar, satu admin, dan dua sales.", "Data profil dikirim tertulis kepada tim (selesai 9 Oktober 2026).",
+     "Yordan"],
+    ["2", "Alur pertanyaan calon siswa", "Calon siswa menghubungi nomor admin atau nomor sales. Pertanyaan terbanyak "
+     "adalah jadwal, biaya, fasilitas, dan cara pendaftaran, dan semuanya dijawab manual dari ponsel.",
+     "Pertanyaan berulang dijawab otomatis dari basis pengetahuan (F04, F05).", "Rifqi"],
+    ["3", "Informasi program", "Informasi program beredar sebagai kartu gambar dan belum tersedia dalam bentuk teks.",
+     "Mitra menyiapkan katalog program dan FAQ dalam bentuk teks untuk basis pengetahuan (F12).", "Yordan"],
+    ["4", "Pencatatan calon siswa", "Data calon siswa tidak dicatat, dan tindak lanjut bergantung pada ingatan sales.",
+     "Kontak dan prospek dibuat otomatis, lengkap dengan tahap dan skor prioritas (F03, F08, F09).",
+     "Rifqi, Isnaini"],
+    ["5", "Pembagian nomor dan hak akses", "Nomor admin dan nomor sales dipegang orang berbeda. Pemilik ingin melihat "
+     "semua percakapan, sedangkan staf cukup melihat nomor yang dipegangnya.",
+     "Login dengan role dan akses per nomor (F01, F14).", "Rifqi"],
+    ["6", "Pemantauan layanan", "Pemilik ingin mengetahui jumlah chat masuk, chat yang belum dibalas, kecepatan balasan, "
+     "dan jumlah calon siswa yang mendaftar per nomor.", "Dashboard per nomor (F10).", "Isnaini, Enrico"],
+    ["7", "Risiko nomor dan data pribadi", "Pemilik khawatir nomor diblokir apabila bot membalas terlalu cepat, dan data "
+     "calon siswa tidak boleh tersebar.", "Mesin anti-ban tanpa broadcast, akses terbatas, dan log audit (F06, F15, "
+     "NF09, NF11).", "Rifqi, Agung"],
+    ["8", "Batasan rilis", "Pembayaran, data akademik, pesan broadcast, dan kanal selain WhatsApp belum dibutuhkan.",
+     "Dicatat sebagai di luar cakupan dan Won't have ({tab:lingkup}, {tab:fr}).", "Yordan"],
+    ["9", "Keterlibatan mitra", "Pemilik bersedia memberi masukan pada setiap Sprint Review. Pengujian memakai nomor "
+     "WhatsApp cadangan, bukan nomor operasional.", "Jadwal Sprint Review dimasukkan ke perencanaan sprint.", "Yordan"],
+], [0.9, 2.9, 5.0, 4.4, 1.8])
 
 lamp("h2app", "Lampiran C. Daftar Hal yang Belum Ditentukan (TBD)", "C")
 lamp("p", "Hal yang belum ditentukan pada saat dokumen ini disusun dicatat pada {tab:tbd} beserta penanggung jawab dan "
@@ -987,14 +1053,14 @@ lamp("p", "Hal yang belum ditentukan pada saat dokumen ini disusun dicatat pada 
 lamp("table", "tbd", "Daftar Hal yang Belum Ditentukan", ["No", "Hal yang belum ditentukan", "Penanggung jawab",
                                                           "Target waktu"], [
     ["1", "NIDN dosen pengampu pada lembar pengesahan", "Ketua kelompok (Yordan)", "Sebelum pengumpulan SRS"],
-    ["2", "Tanggal wawancara, notulen, dan foto requirement gathering (Lampiran B)", "Product Owner (Yordan)",
+    ["2", "Konfirmasi isi notulen requirement gathering ({tab:mom}) kepada mitra", "Product Owner (Yordan)",
      "20 November 2026"],
     ["3", "Konfirmasi daftar di luar cakupan ({tab:lingkup}) dan tingkat keahlian pengguna ({tab:pengguna}) dengan mitra",
      "Product Owner (Yordan)", "20 November 2026 (Sprint Review 1)"],
     ["4", "Penyelarasan migrasi tim dengan ERD: tabel kontak dan percakapan belum ada, dan tabel prospek masih "
      "menyimpan nama serta nomor telepon secara langsung", "Backend (Rifqi) dan frontend (Isnaini)",
      "22 November 2026 (akhir Sprint 1)"],
-    ["5", "Set ikon final dan label menu \"Dasbor\" atau \"Dashboard\" pada antarmuka", "UI/UX (Enrico)",
+    ["5", "Label menu \"Dasbor\" atau \"Dashboard\" pada antarmuka", "UI/UX (Enrico)",
      "22 November 2026"],
     ["6", "Penyedia AI yang dipakai mitra dan anggaran biaya pemanggilan API", "Product Owner (Yordan)",
      "23 November 2026 (awal Sprint 2)"],
@@ -1006,13 +1072,6 @@ lamp("table", "tbd", "Daftar Hal yang Belum Ditentukan", ["No", "Hal yang belum 
      "7 Desember 2026 (awal Sprint 3)"],
 ], [1.0, 7.4, 3.6, 3.0])
 
-lamp("h2app", "Lampiran D. Diagram Aktivitas dan Sequence Lainnya", "D")
-lamp("p", "Lampiran ini memuat activity diagram dan sequence diagram untuk use case UC-05 sampai UC-12. Diagram untuk "
-          "UC-01 sampai UC-04 terdapat pada Bab IV.")
-for i in range(5, 13):
-    nama = UC[i - 1][1]
-    lamp("fig", f"ad{i:02d}", f"Activity Diagram {nama} (AD-{i:02d})", PNG + f"AD-{i:02d} - {nama}.png", "")
-    lamp("fig", f"sd{i:02d}", f"Sequence Diagram {nama} (SD-{i:02d})", PNG + f"SD-{i:02d} - {nama}.png", "")
 
 # ====================================================================== kamus data (keterangan kolom)
 KAMUS_TABEL = ["users", "user_whatsapp_access", "nomor_whatsapp", "pengaturan_ai", "kontak", "percakapan",

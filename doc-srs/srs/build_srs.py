@@ -123,7 +123,8 @@ REV = [
      nama["Rifqi"]],
     ["1.1", "17/11/2026", "Seluruh dokumen", "Penyesuaian ke Laravel 12 dan WA Gateway; arsitektur berlapis "
      "(deployment diagram), ERD, dan sitemap baru; seluruh diagram dibangun ulang di Visual Paradigm; 2FA ditetapkan "
-     "Won't have; kebutuhan non-fungsional dan Lampiran D ditambah; sitasi APA 7.", nama["Agung"]],
+     "Won't have; activity dan sequence diagram kedua belas use case di Bab IV; notulen requirement gathering; "
+     "kebutuhan non-fungsional ditambah; sitasi APA 7.", nama["Agung"]],
 ]
 trev = doc.tables[3]
 for i, vals in enumerate(REV, 1):
@@ -290,13 +291,26 @@ def picture(path, title, label, after):
     if not os.path.exists(full):
         raise SystemExit(f"gambar tidak ada: {full}")
     img = Image.from_file(full)
-    max_w, max_h = Cm(TEXT_W), Cm(20.0)
+    # gambar diletakkan di dalam tabel satu sel bergaris, seperti kotak "[Sisipkan gambar di sini]" pada template
+    max_w, max_h = Cm(TEXT_W - 0.6), Cm(19.5)
     scale = min(max_w / img.px_width, max_h / img.px_height)
-    p = new_par("Normal", WD_ALIGN_PARAGRAPH.CENTER)
-    p.paragraph_format.space_before = Pt(6)
-    keep_next(p)
+    t = doc.add_table(rows=1, cols=1)
+    final_sect.addprevious(t._tbl)
+    t.style = doc.styles["Table Grid"]
+    t.alignment = 1  # tengah
+    t._tbl.tblGrid.findall(qn("w:gridCol"))[0].set(qn("w:w"), str(int(TEXT_W * 567)))
+    cell = t.rows[0].cells[0]
+    cell.width = Cm(TEXT_W)
+    trPr = t.rows[0]._tr.get_or_add_trPr()
+    trPr.append(OxmlElement("w:cantSplit"))
+    p = cell.paragraphs[0]
+    p.style = doc.styles["Normal"]
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    pf = p.paragraph_format
+    pf.space_before, pf.space_after, pf.line_spacing = Pt(4), Pt(4), 1.0
+    keep_next(p)  # tabel gambar tetap satu halaman dengan keterangannya
     p.add_run().add_picture(full, width=int(img.px_width * scale))
-    caption("Keterangan Gambar", label, title)
+    caption("Keterangan Gambar", label, title).paragraph_format.space_before = Pt(4)
     if after:
         body_par(after)
 

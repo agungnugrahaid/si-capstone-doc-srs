@@ -568,7 +568,7 @@ add("table", "nfr", "Kebutuhan Non-Fungsional", ["Kode", "Kategori", "Kebutuhan"
     ["NF14", "Pemeliharaan", "Kode mengikuti konvensi Laravel (Laravel Pint) dan setiap perubahan masuk melalui pull "
      "request yang ditinjau anggota lain.", "Riwayat pull request di GitHub"],
 ], [1.3, 2.6, 6.6, 4.5])
-add("p", "Target NF08 dan NF10 masih perlu dikonfirmasi dengan mitra dan dicatat pada Lampiran C.")
+add("p", "Target persentase ketersediaan pada NF08 ditetapkan bersama mitra dan dicatat pada Lampiran C.")
 
 add("h2", "3.3 Kebutuhan Antarmuka Eksternal")
 add("h3", "3.3.1 Antarmuka Pengguna")
@@ -806,7 +806,8 @@ MK = [  # (kunci, judul subbab, kode F, berkas, judul gambar, penjelasan)
      "Halaman Prospek menampilkan papan prospek per tahap dengan skor prioritas berwarna. Detail kartu memuat rincian "
      "skor, riwayat aktivitas, dan form tindak lanjut."),
     ("mk05", "Halaman Kontak", "F03, F09", "MK-05-kontak-daftar.png", "Rancangan Halaman Kontak",
-     "Halaman Kontak berisi daftar calon siswa dengan pencarian, filter, dan form ubah data."),
+     "Halaman Kontak berisi daftar calon siswa dengan pencarian serta filter jenjang dan sumber. Tombol Ubah membuka "
+     "form data kontak."),
     ("mk06", "Halaman Nomor WhatsApp", "F11", "MK-06-nomor-whatsapp.png", "Rancangan Halaman Nomor WhatsApp",
      "Halaman Nomor WhatsApp menampilkan status sesi, mode AI, dan kesehatan setiap nomor, serta proses penautan "
      "melalui kode QR."),
@@ -820,7 +821,8 @@ MK = [  # (kunci, judul subbab, kode F, berkas, judul gambar, penjelasan)
      "Rancangan Halaman Antrean Keluar dan Pusat Risiko",
      "Halaman ini menampilkan antrean pesan keluar beserta keputusan anti-ban dan daftar insiden pada Pusat Risiko."),
     ("mk10", "Halaman Tim dan Akses", "F14", "MK-10-tim-akses-daftar.png", "Rancangan Halaman Tim dan Akses",
-     "Halaman Tim dan Akses berisi daftar pengguna, role, dan matriks akses per nomor WhatsApp."),
+     "Halaman Tim dan Akses berisi daftar pengguna beserta role, akses nomor, dan status. Tombol Tambah pengguna dan "
+     "Ubah membuka form pengguna dengan matriks akses per nomor WhatsApp."),
     ("mk11", "Halaman Log Audit", "F15", "MK-11-log-audit.png", "Rancangan Halaman Log Audit",
      "Halaman Log Audit menampilkan riwayat tindakan dengan filter pelaku, aksi, dan tanggal, serta detail perubahan."),
 ]
@@ -919,10 +921,10 @@ add("h2", "6.3 Rencana Iterasi / Sprint")
 add("p", "User story dibagi ke dalam tiga sprint dengan komitmen yang tidak melebihi kapasitas 33 Story Point, seperti "
          "pada {tab:sprint}.")
 add("table", "sprint", "Rencana Iterasi Pengembangan", ["Iterasi", "Periode", "User story", "Target keluaran"], [
-    ["Pra-sprint", "Sebelum 9 November 2026", "-", "Inisiasi proyek, requirement gathering, laporan ASN1, UML, mockup "
-     "Figma, dan SRS"],
+    ["Pra-sprint", "Sebelum 9 November 2026", "-", "Inisiasi proyek, requirement gathering, laporan ASN1, UML, dan mockup "
+     "Figma"],
     ["Sprint 1", "Week 1–2 (9–22 November 2026)", "US01–US04 (24 SP)", "Fondasi sistem: login dan RBAC, penautan nomor "
-     "WhatsApp melalui QR, kotak masuk, repositori Laravel, skema basis data, dan WA Gateway dasar"],
+     "WhatsApp melalui QR, kotak masuk, repositori Laravel, skema basis data, WA Gateway dasar, dan dokumen SRS"],
     ["Sprint 2", "Week 3–4 (23 November–6 Desember 2026)", "US05–US11 (33 SP)", "Fitur inti: jawaban AI dengan FTS5, "
      "klasifikasi maksud, eskalasi ke agen, CRM prospek, dan kontak"],
     ["Sprint 3", "Week 5–6 (7–20 Desember 2026)", "US12–US17 (32 SP)", "Penguatan dan rilis: anti-ban, dashboard, log "
@@ -1008,67 +1010,65 @@ lamp("table", "mitra", "Profil Mitra dan Hasil Requirement Gathering", ["Aspek",
 ], [4.0, 11.0])
 lamp("p", "Requirement gathering dilakukan melalui wawancara daring dengan pemilik Asentra. Informasi rapat dicatat pada "
           "{tab:momrapat}, dan hasil pembahasan beserta tindak lanjutnya dicatat dalam format notulen rapat (minutes of "
-          "meeting) pada {tab:mom}.")
+          "meeting) pada {tab:mom}. Kolom kebutuhan terkait menunjukkan kode kebutuhan pada dokumen ini yang menjawab "
+          "setiap topik pembahasan.")
 lamp("table", "momrapat", "Informasi Rapat Requirement Gathering", ["Aspek", "Keterangan"], [
     ["Kegiatan", "Wawancara requirement gathering sistem SAPA"],
     ["Hari, tanggal", "Sabtu, 26 September 2026"],
     ["Waktu", "10.00–11.30 WIB"],
     ["Tempat", "Daring melalui Google Meet"],
     ["Narasumber", "Greta (Owner, Bimbingan Belajar Asentra)"],
-    ["Peserta", "Kelompok 1: Yordan (Product Owner, pengusul proyek), Rifqi, Isnaini, Agung, dan Enrico"],
+    ["Peserta", "Kelompok 1: Yordan (pengusul proyek), Rifqi, Isnaini, Agung, dan Enrico"],
     ["Notulis", "Agung"],
     ["Agenda", "1. Profil dan layanan Asentra\n2. Alur layanan calon siswa melalui WhatsApp\n3. Masalah yang dihadapi "
      "admin dan sales\n4. Kebutuhan sistem dan batasan rilis\n5. Keterlibatan mitra selama pengembangan"],
 ], [3.5, 11.5])
 lamp("table", "mom", "Notulen Hasil Pembahasan Requirement Gathering", ["No", "Topik", "Hasil pembahasan",
-                                                                         "Tindak lanjut", "PIC"], [
+                                                                         "Tindak lanjut", "PIC", "Kebutuhan terkait"], [
     ["1", "Profil Asentra", "Asentra berdiri pada 2024 dan melayani 128 siswa dari jenjang pra-sekolah sampai SMA dengan "
-     "24 pengajar, satu admin, dan dua sales.", "Data profil dikirim tertulis kepada tim (selesai 9 Oktober 2026).",
-     "Yordan"],
+     "24 pengajar, satu admin, dan dua sales.", "Mitra mengirim data profil lengkap secara tertulis kepada tim.",
+     "Yordan", "-"],
     ["2", "Alur pertanyaan calon siswa", "Calon siswa menghubungi nomor admin atau nomor sales. Pertanyaan terbanyak "
      "adalah jadwal, biaya, fasilitas, dan cara pendaftaran, dan semuanya dijawab manual dari ponsel.",
-     "Pertanyaan berulang dijawab otomatis dari basis pengetahuan (F04, F05).", "Rifqi"],
+     "Pertanyaan berulang dijawab otomatis dari informasi resmi Asentra, dan pertanyaan sulit tetap ditangani admin.",
+     "Rifqi", "F04, F05"],
     ["3", "Informasi program", "Informasi program beredar sebagai kartu gambar dan belum tersedia dalam bentuk teks.",
-     "Mitra menyiapkan katalog program dan FAQ dalam bentuk teks untuk basis pengetahuan (F12).", "Yordan"],
+     "Mitra menyiapkan katalog program dan FAQ dalam bentuk teks.", "Yordan", "F12"],
     ["4", "Pencatatan calon siswa", "Data calon siswa tidak dicatat, dan tindak lanjut bergantung pada ingatan sales.",
-     "Kontak dan prospek dibuat otomatis, lengkap dengan tahap dan skor prioritas (F03, F08, F09).",
-     "Rifqi, Isnaini"],
+     "Data calon siswa dicatat otomatis dari chat, lengkap dengan tahap tindak lanjut dan prioritas.",
+     "Rifqi, Isnaini", "F03, F08, F09"],
     ["5", "Pembagian nomor dan hak akses", "Nomor admin dan nomor sales dipegang orang berbeda. Pemilik ingin melihat "
      "semua percakapan, sedangkan staf cukup melihat nomor yang dipegangnya.",
-     "Login dengan role dan akses per nomor (F01, F14).", "Rifqi"],
+     "Setiap staf memiliki akun dengan akses sesuai nomor yang dipegang.", "Rifqi", "F01, F14"],
     ["6", "Pemantauan layanan", "Pemilik ingin mengetahui jumlah chat masuk, chat yang belum dibalas, kecepatan balasan, "
-     "dan jumlah calon siswa yang mendaftar per nomor.", "Dashboard per nomor (F10).", "Isnaini, Enrico"],
+     "dan jumlah calon siswa yang mendaftar per nomor.", "Ringkasan kinerja ditampilkan per nomor.", "Isnaini, Enrico",
+     "F10"],
     ["7", "Risiko nomor dan data pribadi", "Pemilik khawatir nomor diblokir apabila bot membalas terlalu cepat, dan data "
-     "calon siswa tidak boleh tersebar.", "Mesin anti-ban tanpa broadcast, akses terbatas, dan log audit (F06, F15, "
-     "NF09, NF11).", "Rifqi, Agung"],
+     "calon siswa tidak boleh tersebar.", "Pengiriman dibatasi dan dijeda, tidak ada pesan massal, akses data dibatasi, "
+     "dan setiap tindakan dicatat.", "Rifqi, Agung", "F06, F15, NF09, NF11"],
     ["8", "Batasan rilis", "Pembayaran, data akademik, pesan broadcast, dan kanal selain WhatsApp belum dibutuhkan.",
-     "Dicatat sebagai di luar cakupan dan Won't have ({tab:lingkup}, {tab:fr}).", "Yordan"],
-    ["9", "Keterlibatan mitra", "Pemilik bersedia memberi masukan pada setiap Sprint Review. Pengujian memakai nomor "
-     "WhatsApp cadangan, bukan nomor operasional.", "Jadwal Sprint Review dimasukkan ke perencanaan sprint.", "Yordan"],
-], [0.9, 2.9, 5.0, 4.4, 1.8])
+     "Dicatat sebagai batasan rilis pertama.", "Yordan", "W02, W03"],
+    ["9", "Keterlibatan mitra", "Pemilik bersedia memberi masukan pada setiap akhir iterasi. Pengujian memakai nomor "
+     "WhatsApp cadangan, bukan nomor operasional.", "Jadwal demo per iterasi disusun pada perencanaan proyek.", "Yordan",
+     "Bab VI"],
+], [1.0, 2.4, 4.4, 3.5, 1.6, 2.1])
 
 lamp("h2app", "Lampiran C. Daftar Hal yang Belum Ditentukan (TBD)", "C")
-lamp("p", "Hal yang belum ditentukan pada saat dokumen ini disusun dicatat pada {tab:tbd} beserta penanggung jawab dan "
-          "target waktunya.")
+lamp("p", "Hal teknis yang belum ditentukan pada saat dokumen ini disusun dicatat pada {tab:tbd} beserta penanggung "
+          "jawab dan target waktunya.")
 lamp("table", "tbd", "Daftar Hal yang Belum Ditentukan", ["No", "Hal yang belum ditentukan", "Penanggung jawab",
                                                           "Target waktu"], [
-    ["1", "NIDN dosen pengampu pada lembar pengesahan", "Ketua kelompok (Yordan)", "Sebelum pengumpulan SRS"],
-    ["2", "Konfirmasi isi notulen requirement gathering ({tab:mom}) kepada mitra", "Product Owner (Yordan)",
-     "20 November 2026"],
-    ["3", "Konfirmasi daftar di luar cakupan ({tab:lingkup}) dan tingkat keahlian pengguna ({tab:pengguna}) dengan mitra",
-     "Product Owner (Yordan)", "20 November 2026 (Sprint Review 1)"],
-    ["4", "Penyelarasan migrasi tim dengan ERD: tabel kontak dan percakapan belum ada, dan tabel prospek masih "
+    ["1", "Penyelarasan migrasi basis data dengan ERD: tabel kontak dan percakapan belum dibuat, dan tabel prospek masih "
      "menyimpan nama serta nomor telepon secara langsung", "Backend (Rifqi) dan frontend (Isnaini)",
      "22 November 2026 (akhir Sprint 1)"],
-    ["5", "Label menu \"Dasbor\" atau \"Dashboard\" pada antarmuka", "UI/UX (Enrico)",
-     "22 November 2026"],
-    ["6", "Penyedia AI yang dipakai mitra dan anggaran biaya pemanggilan API", "Product Owner (Yordan)",
+    ["2", "Cara menjalankan WA Gateway di VPS (process manager) dan versi Baileys yang dikunci", "Backend (Rifqi)",
+     "22 November 2026 (akhir Sprint 1)"],
+    ["3", "Penyedia AI yang dipakai dan anggaran biaya pemanggilan API", "Product Owner (Yordan)",
      "23 November 2026 (awal Sprint 2)"],
-    ["7", "Komponen, bobot, dan ambang lima komponen skor prioritas prospek", "Backend (Rifqi)", "30 November 2026"],
-    ["8", "Nilai batas anti-ban (per menit, per jam, per hari, jeda, jam aktif)", "Backend (Rifqi)", "7 Desember 2026"],
-    ["9", "Cara menjalankan WA Gateway di VPS (process manager) dan versi Baileys yang dikunci", "Backend (Rifqi)",
-     "22 November 2026"],
-    ["10", "Jumlah pengguna bersamaan, target ketersediaan (NF08), dan target SUS (NF10)", "Product Owner (Yordan)",
+    ["4", "Komponen, bobot, dan ambang lima komponen skor prioritas prospek", "Backend (Rifqi)", "30 November 2026"],
+    ["5", "Nilai batas anti-ban (per menit, per jam, per hari, jeda, jam aktif)", "Backend (Rifqi)",
+     "7 Desember 2026 (awal Sprint 3)"],
+    ["6", "Jumlah pengguna bersamaan dan target persentase ketersediaan (NF08)", "Product Owner (Yordan)",
      "7 Desember 2026 (awal Sprint 3)"],
 ], [1.0, 7.4, 3.6, 3.0])
 
@@ -1080,7 +1080,7 @@ KAMUS_TABEL = ["users", "user_whatsapp_access", "nomor_whatsapp", "pengaturan_ai
 KET = {
     "id": "Kunci utama", "name": "Nama pengguna", "email": "Email login, unik", "password": "Hash bcrypt",
     "role": "Agen/CS, Supervisor, atau Administrator", "user_id": "FK ke users",
-    "nomor_whatsapp_id": "FK ke nomor_whatsapp", "hak_akses": "Level akses pengguna pada nomor (baca atau balas)",
+    "nomor_whatsapp_id": "FK ke nomor_whatsapp", "hak_akses": "Level akses pada nomor: lihat, balas, atau kelola",
     "label": "Nama tampilan atau label", "nomor": "Nomor WhatsApp, unik", "tujuan": "Admin atau sales",
     "status": "Status data (lihat aturan bisnis)", "mode_ai": "Otomatis, draf, atau mati",
     "skor_kesehatan": "Skor kesehatan nomor 0–100", "penyedia": "Penyedia AI", "model": "Nama model AI",

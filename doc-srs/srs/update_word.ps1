@@ -22,6 +22,7 @@ try {
     $doc.Close($false)
     "pdf: $pdf"
 } finally {
-    $word.Quit()
+    # never close a Word instance that still holds someone else's documents
+    if ($word.Documents.Count -eq 0) { $word.Quit() }
     [System.Runtime.InteropServices.Marshal]::ReleaseComObject($word) | Out-Null
 }

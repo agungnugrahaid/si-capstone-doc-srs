@@ -1,6 +1,6 @@
 """Build SRS SAPA v1.1 dari template P07 (Template SRS Capstone Project SI UMBY).
 
-Usage: python build_srs.py [path/ke/srs-identitas.json]
+Usage: python build_srs.py [path/ke/srs-identitas.json] [path/keluaran.docx]
   - Template : doc-srs/srs/template/P07 - Template SRS Capstone Project - SI UMBY.docx
   - Isi      : doc-srs/srs/isi_srs.py (Bab I-VI, pustaka, lampiran)
   - Diagram  : doc-srs/diagram/png (Visual Paradigm, dibangun dengan diagram/generator/run_win.sh)
@@ -123,7 +123,7 @@ REV = [
      nama["Rifqi"]],
     ["1.1", "17/11/2026", "Seluruh dokumen", "Penyesuaian ke Laravel 12 dan WA Gateway; arsitektur berlapis "
      "(deployment diagram), ERD, dan sitemap baru; seluruh diagram dibangun ulang di Visual Paradigm; 2FA ditetapkan "
-     "Won't have; activity dan sequence diagram kedua belas use case di Bab IV; notulen requirement gathering; "
+     "Won't have; activity dan sequence diagram kedua belas use case di Bab IV; "
      "kebutuhan non-fungsional ditambah; sitasi APA 7.", nama["Agung"]],
 ]
 trev = doc.tables[3]
@@ -404,7 +404,7 @@ for bad in ("kata sandi", "dasbor ", "kueri", "surel", "peladen", "purwarupa", "
             "tidak hanya"):
     if bad in words.lower() if bad.islower() else bad in words:
         print("PERINGATAN istilah:", bad)
-out = ID["output"]
+out = sys.argv[2] if len(sys.argv) > 2 else ID["output"]  # argumen ke-2: path keluaran lain
 doc.save(out)
 print("tersimpan:", out)
 print("tabel:", sum(1 for k in NUM if k.startswith("tab:")), "gambar:", sum(1 for k in NUM if k.startswith("fig:")))

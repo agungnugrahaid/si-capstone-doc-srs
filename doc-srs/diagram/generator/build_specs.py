@@ -29,7 +29,7 @@ def use_case_diagram():
         ("uc04", "Mengelola Percakapan"),
         ("uc05", "Mengelola Prospek"),
         ("uc06", "Mengelola Kontak Pelanggan"),
-        ("uc07", "Melihat Dasbor Pemantauan"),
+        ("uc07", "Melihat Dashboard Pemantauan"),
         ("uc09", "Mengelola Basis Pengetahuan"),
         ("uc12", "Melihat Log Audit"),
         ("uc08", "Mengelola Nomor WhatsApp"),
@@ -156,11 +156,11 @@ def sequences():
     S("SD-01 - Login",
       [("U", "Pengguna", "A"), ("V", "View : Login", "V"), ("C", "Cont : Login", "C"),
        ("E1", "Ent : Pengguna", "E"), ("E2", "Ent : AksesNomor", "E"), ("E3", "Ent : LogAudit", "E")],
-      [("msg", "U", "V", "Isi email & kata sandi, klik Masuk", "1"),
-       ("msg", "V", "C", "login(email, kataSandi)", "1.1"),
+      [("msg", "U", "V", "Isi email & password, klik Masuk", "1"),
+       ("msg", "V", "C", "login(email, password)", "1.1"),
        ("msg", "C", "E1", "cariPengguna(email)", "1.1.1"),
        ("ret", "E1", "C", "dataPengguna", "1.1.2"),
-       ("self", "C", "C", "verifikasiKataSandi()", "1.1.3"),
+       ("self", "C", "C", "verifikasiPassword()", "1.1.3"),
        ("msg", "C", "E2", "ambilAksesNomor(idPengguna)", "1.1.4"),
        ("ret", "E2", "C", "daftarNomor", "1.1.5"),
        ("msg", "C", "E3", "catatLog(\"login\")", "1.1.6"),
@@ -187,7 +187,7 @@ def sequences():
       [("self", "C", "C", "klasifikasiMaksud() & ekstrakEntitas()", "1"),
        ("msg", "C", "E1", "perbaruiKontak(entitas)", "1.1"),
        ("msg", "C", "E2", "hitungSkor()", "1.2"),
-       ("msg", "C", "E3", "cariArtikel(kueri)", "1.3"),
+       ("msg", "C", "E3", "cariArtikel(query)", "1.3"),
        ("ret", "E3", "C", "artikelRelevan", "1.4"),
        ("msg", "C", "AI", "susunJawaban(artikel)", "1.5"),
        ("ret", "AI", "C", "jawaban", "1.6"),
@@ -252,17 +252,17 @@ def sequences():
        ("msg", "C", "E1", "perbarui()", "2.1.2"),
        ("msg", "C", "E2", "catatLog()", "2.1.3"),
        ("ret", "C", "V", "tampilkanTersimpan", "2.2")])
-    S("SD-07 - Melihat Dasbor Pemantauan",
-      [("U", "Supervisor/Administrator", "A"), ("V", "View : Dasbor", "V"), ("C", "Cont : Dasbor", "C"),
+    S("SD-07 - Melihat Dashboard Pemantauan",
+      [("U", "Supervisor/Administrator", "A"), ("V", "View : Dashboard", "V"), ("C", "Cont : Dashboard", "C"),
        ("E1", "Ent : AksesNomor", "E"), ("E2", "Ent : MetrikHarian", "E"), ("E3", "Ent : NomorWhatsApp", "E")],
-      [("msg", "U", "V", "Klik menu Dasbor", "1"),
-       ("msg", "V", "C", "muatDasbor()", "1.1"),
+      [("msg", "U", "V", "Klik menu Dashboard", "1"),
+       ("msg", "V", "C", "muatDashboard()", "1.1"),
        ("msg", "C", "E1", "ambilAksesNomor()", "1.1.1"),
        ("msg", "C", "E2", "ambilMetrik(nomor, periode)", "1.1.2"),
        ("ret", "E2", "C", "metrik", "1.1.3"),
        ("msg", "C", "E3", "ambilStatusNomor()", "1.1.4"),
        ("ret", "E3", "C", "status", "1.1.5"),
-       ("ret", "C", "V", "tampilkanDasbor", "1.2"),
+       ("ret", "C", "V", "tampilkanDashboard", "1.2"),
        ("msg", "U", "V", "Pilih filter nomor & periode", "2"),
        ("msg", "V", "C", "filterPeriode(nomor, periode)", "2.1"),
        ("self", "C", "C", "hitungMetrik()", "2.1.1"),
@@ -349,8 +349,8 @@ def sequences():
 
 # --------------------------------------------------------------------------- class (MVC)
 UI = [
-    ("UI:Login", ["Email", "KataSandi"]),
-    ("UI:Dasbor", ["NomorTerpilih", "Periode"]),
+    ("UI:Login", ["Email", "Password"]),
+    ("UI:Dashboard", ["NomorTerpilih", "Periode"]),
     ("UI:KotakMasuk", ["PercakapanTerpilih", "IsiBalasan"]),
     ("UI:Prospek", ["TahapFilter", "ProspekTerpilih", "Catatan"]),
     ("UI:Kontak", ["KataKunci", "DataKontak"]),
@@ -363,7 +363,7 @@ UI = [
 ]
 CONT = [
     ("Cont:Login", ["validasiLogin", "ambilAksesNomor", "catatLogin"]),
-    ("Cont:Dasbor", ["muatDasbor", "filterPeriode", "hitungMetrik"]),
+    ("Cont:Dashboard", ["muatDashboard", "filterPeriode", "hitungMetrik"]),
     ("Cont:Percakapan", ["terimaPesan", "muatPercakapan", "kirimBalasan", "ambilAlih", "selesaikan"]),
     ("Cont:Prospek", ["muatProspek", "ubahTahap", "tambahAktivitas", "hitungSkor"]),
     ("Cont:Kontak", ["cariKontak", "simpanKontak"]),
@@ -376,7 +376,7 @@ CONT = [
     ("Cont:AntiBan", ["nilaiPesan", "antrekan", "kirimAntrean", "catatInsiden"]),
 ]
 ENT = [
-    ("Ent:Pengguna", ["idPengguna", "nama", "email", "kataSandiHash", "peran", "status"]),
+    ("Ent:Pengguna", ["idPengguna", "nama", "email", "passwordHash", "peran", "status"]),
     ("Ent:AksesNomor", ["idPengguna", "idNomor", "level"]),
     ("Ent:MetrikHarian", ["idNomor", "tanggal", "pesanMasuk", "pesanKeluar", "balasanAI", "balasanManusia", "belumDibalas", "rataWaktuBalas", "prospekBaru", "konversi"]),
     ("Ent:Percakapan", ["idPercakapan", "idKontak", "idNomor", "status", "penangan", "idAgen", "belumDibaca", "waktuBalasPertama"]),
@@ -393,14 +393,14 @@ ENT = [
     ("Ent:Insiden", ["idInsiden", "idNomor", "jenis", "tingkat", "rencanaPemulihan", "status"]),
 ]
 UI_CONT = {
-    "UI:Login": ["Cont:Login"], "UI:Dasbor": ["Cont:Dasbor"], "UI:KotakMasuk": ["Cont:Percakapan"],
+    "UI:Login": ["Cont:Login"], "UI:Dashboard": ["Cont:Dashboard"], "UI:KotakMasuk": ["Cont:Percakapan"],
     "UI:Prospek": ["Cont:Prospek"], "UI:Kontak": ["Cont:Kontak"], "UI:NomorWhatsApp": ["Cont:NomorWA"],
     "UI:BasisPengetahuan": ["Cont:BasisPengetahuan"], "UI:PengaturanAI": ["Cont:PengaturanAI"],
     "UI:TimAkses": ["Cont:TimAkses"], "UI:LogAudit": ["Cont:LogAudit"], "UI:WhatsAppGateway": ["Cont:Percakapan"],
 }
 CONT_ENT = {
     "Cont:Login": ["Ent:Pengguna", "Ent:AksesNomor", "Ent:LogAudit"],
-    "Cont:Dasbor": ["Ent:MetrikHarian", "Ent:NomorWhatsApp"],
+    "Cont:Dashboard": ["Ent:MetrikHarian", "Ent:NomorWhatsApp"],
     "Cont:Percakapan": ["Ent:Kontak", "Ent:Percakapan", "Ent:Pesan", "Ent:Prospek"],
     "Cont:Prospek": ["Ent:Prospek", "Ent:AktivitasProspek"],
     "Cont:Kontak": ["Ent:Kontak"],
@@ -416,8 +416,32 @@ ROW = 15  # VP row height for attributes/operations
 HEAD = 24
 
 
-def class_diagram():
-    emit("DIAGRAM", "class", "Class Diagram SAPA (MVC)")
+CD_PARTS = [
+    ("Class Diagram SAPA (MVC) Bagian 1 - Layanan Percakapan dan CRM",
+     ["UI:Login", "UI:Dashboard", "UI:KotakMasuk", "UI:WhatsAppGateway", "UI:Prospek", "UI:Kontak"],
+     ["Cont:Login", "Cont:Dashboard", "Cont:Percakapan", "Cont:Prospek", "Cont:Kontak", "Cont:AIEngine", "Cont:AntiBan"]),
+    ("Class Diagram SAPA (MVC) Bagian 2 - Pengelolaan Sistem",
+     ["UI:NomorWhatsApp", "UI:BasisPengetahuan", "UI:PengaturanAI", "UI:TimAkses", "UI:LogAudit"],
+     ["Cont:NomorWA", "Cont:BasisPengetahuan", "Cont:PengaturanAI", "Cont:TimAkses", "Cont:LogAudit"]),
+]
+
+
+def class_diagrams():
+    """The full MVC diagram is too tall for one page, so it is split by module."""
+    for name, uis, conts in CD_PARTS:
+        ents = []
+        for c in conts:
+            for e in CONT_ENT[c]:
+                if e not in ents:
+                    ents.append(e)
+        order = [e for e, _ in ENT]
+        ents.sort(key=order.index)
+        class_diagram(name, [u for u in UI if u[0] in uis], [c for c in CONT if c[0] in conts],
+                      [e for e in ENT if e[0] in ents])
+
+
+def class_diagram(title="Class Diagram SAPA (MVC)", UI=UI, CONT=CONT, ENT=ENT):
+    emit("DIAGRAM", "class", title)
     ids = {}
 
     def column(items, x, kind, gap):
@@ -455,10 +479,12 @@ def class_diagram():
     column(ENT, 920, "Ent", 20)
     for ui, conts in UI_CONT.items():
         for c in conts:
-            emit("CONN", "assoc", ids[ui], ids[c])
+            if ui in ids and c in ids:
+                emit("CONN", "assoc", ids[ui], ids[c])
     for c, ents in CONT_ENT.items():
         for e in ents:
-            emit("CONN", "assoc", ids[c], ids[e])
+            if c in ids and e in ids:
+                emit("CONN", "assoc", ids[c], ids[e])
 
 
 # --------------------------------------------------------------------------- activity
@@ -493,19 +519,23 @@ class Node:
         return self.y + self.h
 
 
-def activity(name, lane_a, nodes, edges):
+def activity(name, lane_a, nodes, edges, lane_s="Sistem SAPA"):
     emit("DIAGRAM", "activity", name)
     N = {}
     for nid, lane, row, col, kind, text in nodes:
         N[nid] = Node(nid, lane, row, col, kind, text)
     height = max(n.bottom for n in N.values()) + 50
     emit("SHAPE", "pa", "partition", 20, 20, LANE_A_W, height, lane_a)
-    emit("SHAPE", "ps", "partition", 20 + LANE_A_W, 20, LANE_S_W, height, "Sistem SAPA")
+    emit("SHAPE", "ps", "partition", 20 + LANE_A_W, 20, LANE_S_W, height, lane_s)
     for n in N.values():
         emit("SHAPE", n.id, n.kind, n.x, n.y, n.w, n.h, n.text)
-    for a, b, guard in edges:
+    for e in edges:
+        a, b, guard = e[:3]
         s, t = N[a], N[b]
         pts, cap = route(s, t)
+        if len(e) > 3:  # explicit route for loops that would otherwise cross boxes
+            pts = e[3]
+            cap = (pts[0][0] + 6, pts[0][1] - 18)
         emit("CONN", "flow", a, b, guard, "", "", ";".join(f"{x},{y}" for x, y in pts),
              f"{cap[0]},{cap[1]}" if guard else "")
 
@@ -552,11 +582,11 @@ def activities():
     A("AD-01 - Login", "Pengguna", [
         ("i", "A", 0, 0, "initial", ""),
         ("a1", "A", 1, 0, "action", "Membuka halaman Login"),
-        ("s1", "S", 2, 0, "action", "Menampilkan form email dan kata sandi"),
-        ("a2", "A", 3, 0, "action", "Mengisi email dan kata sandi, klik Masuk"),
+        ("s1", "S", 2, 0, "action", "Menampilkan form email dan password"),
+        ("a2", "A", 3, 0, "action", "Mengisi email dan password, klik Masuk"),
         ("s2", "S", 4, 0, "action", "Memvalidasi kredensial"),
         ("d1", "S", 5, 0, "decision", ""),
-        ("e1", "S", 5, 1, "action", "Menampilkan \"Email atau kata sandi salah\""),
+        ("e1", "S", 5, 1, "action", "Menampilkan \"Email atau password salah\""),
         ("d2", "S", 6, 0, "decision", ""),
         ("e2", "S", 6, 1, "action", "Menampilkan \"Akun Anda dinonaktifkan\""),
         ("f2", "S", 7, 1, "final", ""),
@@ -668,9 +698,9 @@ def activities():
         ("d1", "s2", "tidak ditemukan"), ("s2", "f2", ""), ("s3", "a2", ""), ("a2", "s4", ""),
         ("s4", "a3", ""), ("a3", "d2", ""), ("d2", "s6", "data valid"), ("d2", "s5", "tidak valid"),
         ("s5", "a3", ""), ("s6", "f", "")])
-    A("AD-07 - Melihat Dasbor Pemantauan", "Supervisor / Administrator", [
+    A("AD-07 - Melihat Dashboard Pemantauan", "Supervisor / Administrator", [
         ("i", "A", 0, 0, "initial", ""),
-        ("a1", "A", 1, 0, "action", "Memilih menu Dasbor"),
+        ("a1", "A", 1, 0, "action", "Memilih menu Dashboard"),
         ("s1", "S", 2, 0, "action", "Mengambil metrik harian dan status nomor yang diizinkan"),
         ("s2", "S", 3, 0, "action", "Menampilkan kartu ringkasan, grafik, dan status nomor"),
         ("a2", "A", 4, 0, "action", "Memilih filter nomor dan periode"),
@@ -725,7 +755,7 @@ def activities():
         ("s3", "S", 6, 0, "action", "Menguji koneksi penyedia AI"),
         ("d2", "S", 7, 0, "decision", ""),
         ("s4", "S", 7, 1, "action", "Menampilkan \"Kunci API ditolak penyedia\""),
-        ("s5", "S", 8, 0, "action", "Mengenkripsi kunci API (AES-256-GCM)"),
+        ("s5", "S", 8, 0, "action", "Mengenkripsi kunci API (enkripsi Laravel)"),
         ("s6", "S", 9, 0, "action", "Menyimpan pengaturan dan mencatat log audit"),
         ("f", "S", 10, 0, "final", ""),
     ], [("i", "a1", ""), ("a1", "s1", ""), ("s1", "a2", ""), ("a2", "a3", ""), ("a3", "d1", ""),
@@ -761,12 +791,231 @@ def activities():
         ("d1", "s4", "ada hasil"), ("d1", "s3", "tidak ada"), ("s3", "f", ""), ("s4", "f", "")])
 
 
+# --------------------------------------------------------------------------- SRS additions
+def scrum_activity():
+    """Scrum cycle of the SAPA project as an activity diagram (PO/stakeholder lane vs development team)."""
+    def c(lane, row, col=0):  # centre of a node, same formula as Node
+        cx = 20 + LANE_A_W // 2 + col * 200 if lane == "A" else 20 + LANE_A_W + (170 if col == 0 else 420)
+        return cx, 90 + row * 82
+    d1x, d1y = c("S", 5)
+    s2x, s2y = c("S", 3)
+    d2x, d2y = c("S", 9)
+    a1x, a1y = c("A", 1)
+    activity("AD-Scrum - Siklus Scrum Proyek SAPA", "Product Owner dan Stakeholder", [
+        ("i", "A", 0, 0, "initial", ""),
+        ("a1", "A", 1, 0, "action", "Menyusun dan mengurutkan Product Backlog"),
+        ("s1", "S", 2, 0, "action", "Sprint Planning: memilih PBI dan menyusun Sprint Backlog"),
+        ("s2", "S", 3, 0, "action", "Mengerjakan PBI dan menguji fitur"),
+        ("s3", "S", 4, 0, "action", "Daily Scrum 15 menit"),
+        ("d1", "S", 5, 0, "decision", ""),
+        ("s4", "S", 6, 0, "action", "Menyiapkan Increment sesuai Definition of Done"),
+        ("a2", "A", 7, 0, "action", "Sprint Review: demo Increment dan memberi masukan"),
+        ("s5", "S", 8, 0, "action", "Sprint Retrospective"),
+        ("d2", "S", 9, 0, "decision", ""),
+        ("a3", "A", 10, 0, "action", "Demo akhir dan serah terima kepada mitra"),
+        ("f", "A", 11, 0, "final", ""),
+    ], [("i", "a1", ""), ("a1", "s1", ""), ("s1", "s2", ""), ("s2", "s3", ""), ("s3", "d1", ""),
+        ("d1", "s2", "sprint berjalan", [(d1x + 17, d1y), (d1x + 130, d1y), (d1x + 130, s2y), (s2x + 95, s2y)]),
+        ("d1", "s4", "akhir sprint"), ("s4", "a2", ""), ("a2", "s5", ""), ("s5", "d2", ""),
+        ("d2", "a1", "sprint berikutnya", [(d2x - 17, d2y), (355, d2y), (355, a1y), (a1x + 95, a1y)]),
+        ("d2", "a3", "Sprint 3 selesai"), ("a3", "f", "")],
+        lane_s="Tim Pengembang")
+
+
+def deployment_diagram():
+    """System architecture as nested UML nodes, layered like the course example (hardware -> VM -> server -> app)."""
+    emit("DIAGRAM", "deployment", "Deployment Diagram Arsitektur SAPA")
+    S = lambda *a: emit("SHAPE", *a)
+    # clients and external services (top row)
+    S("pc", "node", 20, 20, 250, 110, "Perangkat Pengguna (Laptop/PC)", "<<device>>")
+    S("br", "component", 40, 70, 210, 44, "Peramban Web")
+    emit("PARENT", "br", "pc")
+    S("hp", "node", 300, 20, 250, 110, "Ponsel Pelanggan", "<<device>>")
+    S("wapp", "component", 320, 70, 210, 44, "Aplikasi WhatsApp")
+    emit("PARENT", "wapp", "hp")
+    S("wasrv", "node", 600, 20, 250, 110, "Server WhatsApp (Meta)", "<<external>>")
+    S("ai", "node", 880, 20, 250, 110, "Penyedia AI (OpenAI / Gemini)", "<<external>>")
+    # infrastructure stack
+    S("hw", "node", 20, 190, 1110, 510, "Infrastruktur Perangkat Keras Penyedia VPS", "<<device>>")
+    S("vps", "node", 40, 240, 1070, 440, "VPS Ubuntu 24.04 LTS (2 vCPU, RAM 2 GB, SSD 40 GB)", "<<virtual machine>>")
+    emit("PARENT", "vps", "hw")
+    S("web", "node", 60, 290, 600, 370, "Web Server: Nginx + PHP-FPM 8.2", "<<execution environment>>")
+    emit("PARENT", "web", "vps")
+    S("app", "component", 80, 340, 560, 300, "Aplikasi SAPA (Laravel 12)")
+    emit("PARENT", "app", "web")
+    mods = [("m1", "Antarmuka Blade + Tailwind CSS"), ("m2", "Autentikasi dan RBAC per Nomor"),
+            ("m3", "Modul OLTP: Kotak Masuk, Prospek, Kontak"), ("m4", "Modul OLAP: Dashboard Metrik Harian"),
+            ("m5", "Mesin AI (RAG, FTS5) dan Eskalasi"), ("m6", "Mesin Anti-ban dan Queue Worker")]
+    for k, (mid, name) in enumerate(mods):
+        S(mid, "component", 100 + (k % 2) * 270, 390 + (k // 2) * 90, 250, 60, name)
+        emit("PARENT", mid, "app")
+    S("node", "node", 690, 290, 400, 200, "Runtime Node.js 22", "<<execution environment>>")
+    emit("PARENT", "node", "vps")
+    S("gw", "component", 720, 350, 340, 70, "WA Gateway (Baileys)")
+    emit("PARENT", "gw", "node")
+    S("db", "artifact", 720, 540, 340, 70, "database.sqlite (SQLite + FTS5)", "<<database>>")
+    emit("PARENT", "db", "vps")
+    C = lambda a, b, label, cap: emit("CONN", "assoc", a, b, label, "", "", "", cap)
+    C("pc", "web", "HTTPS", "150,150")
+    C("hp", "wasrv", "Internet", "553,50")
+    C("gw", "wasrv", "WebSocket WhatsApp Web", "735,150")
+    C("app", "gw", "HTTP lokal (JSON)", "646,425")
+    C("app", "db", "PDO", "660,555")
+    C("app", "ai", "HTTPS REST (JSON)", "930,150")
+
+
+ERD_TABLES = [  # (id, table, x, y, [(column, type, pk, nullable)])
+    ("kontak", "kontak", 20, 20, [("id", "BIGINT", 1, 0), ("nomor_telepon", "VARCHAR(20)", 0, 0), ("nama", "VARCHAR(255)", 0, 1),
+        ("jenjang", "VARCHAR(20)", 0, 1), ("kelas", "VARCHAR(20)", 0, 1), ("mapel", "VARCHAR(100)", 0, 1),
+        ("kota", "VARCHAR(100)", 0, 1), ("sumber", "VARCHAR(50)", 0, 1), ("label", "VARCHAR(100)", 0, 1)]),
+    ("prospek", "prospek", 20, 260, [("id", "BIGINT", 1, 0), ("kontak_id", "BIGINT", 0, 0), ("penanggung_jawab", "BIGINT", 0, 1),
+        ("tahap", "VARCHAR(20)", 0, 0), ("skor", "INTEGER", 0, 0), ("rincian_skor", "TEXT", 0, 1),
+        ("program", "VARCHAR(100)", 0, 1), ("tindak_lanjut_berikut", "DATE", 0, 1)]),
+    ("aktv", "aktivitas_prospek", 20, 490, [("id", "BIGINT", 1, 0), ("prospek_id", "BIGINT", 0, 0), ("user_id", "BIGINT", 0, 0),
+        ("jenis", "VARCHAR(30)", 0, 0), ("catatan", "TEXT", 0, 0), ("waktu", "TIMESTAMP", 0, 0)]),
+    ("perc", "percakapan", 300, 20, [("id", "BIGINT", 1, 0), ("kontak_id", "BIGINT", 0, 0), ("nomor_whatsapp_id", "BIGINT", 0, 0),
+        ("agen_id", "BIGINT", 0, 1), ("status", "VARCHAR(20)", 0, 0), ("penangan", "VARCHAR(10)", 0, 0),
+        ("belum_dibaca", "INTEGER", 0, 0), ("waktu_balas_pertama", "INTEGER", 0, 1)]),
+    ("pesan", "pesan_whatsapp", 300, 260, [("id", "BIGINT", 1, 0), ("percakapan_id", "BIGINT", 0, 0), ("arah", "VARCHAR(10)", 0, 0),
+        ("jenis_pengirim", "VARCHAR(10)", 0, 0), ("isi", "TEXT", 0, 0), ("status", "VARCHAR(20)", 0, 0), ("meta_ai", "TEXT", 0, 1)]),
+    ("art", "artikel_pengetahuan", 300, 490, [("id", "BIGINT", 1, 0), ("judul", "VARCHAR(255)", 0, 0), ("kategori", "VARCHAR(50)", 0, 0),
+        ("isi", "TEXT", 0, 0), ("label", "VARCHAR(255)", 0, 1), ("aktif", "BOOLEAN", 0, 0)]),
+    ("users", "users", 580, 20, [("id", "BIGINT", 1, 0), ("name", "VARCHAR(255)", 0, 0), ("email", "VARCHAR(255)", 0, 0),
+        ("password", "VARCHAR(255)", 0, 0), ("role", "VARCHAR(20)", 0, 0), ("status", "VARCHAR(20)", 0, 0)]),
+    ("uwa", "user_whatsapp_access", 580, 230, [("id", "BIGINT", 1, 0), ("user_id", "BIGINT", 0, 0),
+        ("nomor_whatsapp_id", "BIGINT", 0, 0), ("hak_akses", "VARCHAR(20)", 0, 0)]),
+    ("log", "log_audit", 580, 400, [("id", "BIGINT", 1, 0), ("user_id", "BIGINT", 0, 1), ("aksi", "VARCHAR(50)", 0, 0),
+        ("entitas", "VARCHAR(50)", 0, 0), ("entitas_id", "BIGINT", 0, 1), ("detail", "TEXT", 0, 1), ("created_at", "TIMESTAMP", 0, 0)]),
+    ("nomor", "nomor_whatsapp", 860, 20, [("id", "BIGINT", 1, 0), ("label", "VARCHAR(100)", 0, 0), ("nomor", "VARCHAR(20)", 0, 0),
+        ("tujuan", "VARCHAR(10)", 0, 0), ("status", "VARCHAR(20)", 0, 0), ("mode_ai", "VARCHAR(20)", 0, 0),
+        ("skor_kesehatan", "INTEGER", 0, 0)]),
+    ("pai", "pengaturan_ai", 860, 230, [("id", "BIGINT", 1, 0), ("nomor_whatsapp_id", "BIGINT", 0, 1), ("penyedia", "VARCHAR(50)", 0, 0),
+        ("model", "VARCHAR(100)", 0, 0), ("api_key", "TEXT", 0, 1), ("instruksi_persona", "TEXT", 0, 1),
+        ("ambang_keyakinan", "DECIMAL", 0, 0), ("kata_kunci_eskalasi", "TEXT", 0, 1), ("jeda_min", "INTEGER", 0, 0),
+        ("jeda_max", "INTEGER", 0, 0), ("batas_per_menit", "INTEGER", 0, 0), ("batas_per_jam", "INTEGER", 0, 0),
+        ("batas_pesan_harian", "INTEGER", 0, 0), ("jam_mulai", "TIME", 0, 0), ("jam_selesai", "TIME", 0, 0)]),
+    ("met", "metrik_harian", 860, 550, [("id", "BIGINT", 1, 0), ("nomor_whatsapp_id", "BIGINT", 0, 0), ("tanggal", "DATE", 0, 0),
+        ("pesan_masuk", "INTEGER", 0, 0), ("pesan_keluar", "INTEGER", 0, 0), ("balasan_ai", "INTEGER", 0, 0),
+        ("balasan_manusia", "INTEGER", 0, 0), ("belum_dibalas", "INTEGER", 0, 0), ("rata_waktu_balas", "INTEGER", 0, 0),
+        ("prospek_baru", "INTEGER", 0, 0), ("konversi", "INTEGER", 0, 0)]),
+    ("antre", "antrean_pesan", 1140, 20, [("id", "BIGINT", 1, 0), ("nomor_whatsapp_id", "BIGINT", 0, 0),
+        ("pesan_whatsapp_id", "BIGINT", 0, 1), ("penerima", "VARCHAR(20)", 0, 0), ("isi_pesan", "TEXT", 0, 0),
+        ("skor_risiko", "INTEGER", 0, 0), ("keputusan", "VARCHAR(10)", 0, 0), ("percobaan", "INTEGER", 0, 0),
+        ("jadwal_kirim", "TIMESTAMP", 0, 1), ("terkirim_pada", "TIMESTAMP", 0, 1), ("alasan_penahanan", "TEXT", 0, 1)]),
+    ("riw", "riwayat_antrean", 1140, 320, [("id", "BIGINT", 1, 0), ("antrean_pesan_id", "BIGINT", 0, 0),
+        ("status_sebelumnya", "VARCHAR(20)", 0, 1), ("status_baru", "VARCHAR(20)", 0, 0), ("keterangan", "TEXT", 0, 1),
+        ("diubah_pada", "TIMESTAMP", 0, 0)]),
+    ("ins", "insiden_risiko", 1140, 510, [("id", "BIGINT", 1, 0), ("nomor_whatsapp_id", "BIGINT", 0, 0),
+        ("jenis_insiden", "VARCHAR(50)", 0, 0), ("tingkat_risiko", "VARCHAR(10)", 0, 0), ("deskripsi", "TEXT", 0, 0),
+        ("status", "VARCHAR(20)", 0, 0), ("terjadi_pada", "TIMESTAMP", 0, 0)]),
+]
+ERD_FK = [("users", "uwa"), ("nomor", "uwa"), ("nomor", "pai"), ("kontak", "perc"), ("nomor", "perc"), ("users", "perc"),
+          ("perc", "pesan"), ("kontak", "prospek"), ("users", "prospek"), ("prospek", "aktv"), ("users", "aktv"),
+          ("nomor", "antre"), ("pesan", "antre"), ("antre", "riw"), ("nomor", "ins"), ("nomor", "met"), ("users", "log")]
+
+
+FK_COLS = {"kontak_id", "nomor_whatsapp_id", "agen_id", "percakapan_id", "penanggung_jawab", "prospek_id",
+           "user_id", "pesan_whatsapp_id", "antrean_pesan_id"}
+ERD_PARTS = [  # (title, grid rows of table ids, relations parent -> child); neighbours in the grid keep lines short
+    ("ERD SAPA Bagian 1 - Percakapan dan CRM",
+     [["nomor", "perc", "pesan"], ["kontak", "users", None], ["prospek", "aktv", None]],
+     [("kontak", "perc"), ("nomor", "perc"), ("users", "perc"), ("perc", "pesan"), ("kontak", "prospek"),
+      ("users", "prospek"), ("prospek", "aktv"), ("users", "aktv")]),
+    ("ERD SAPA Bagian 2 - Pengelolaan Sistem dan Pengiriman",
+     [["log", "users", "pai", "pesan"], [None, "uwa", "nomor", "antre"], ["art", "met", "ins", "riw"]],
+     [("users", "uwa"), ("nomor", "uwa"), ("nomor", "pai"), ("nomor", "met"), ("nomor", "antre"),
+      ("pesan", "antre"), ("antre", "riw"), ("nomor", "ins"), ("users", "log")]),
+]
+
+
+def erd():
+    """Physical data model in class notation (<<table>>, PK/FK, 1 : N relations), split in two for page size.
+    VP's native ERD shapes render without column text in headless export, so class notation is used."""
+    T = {t[0]: t for t in ERD_TABLES}
+    keys = lambda c: ",".join(k for k, ok in (("PK", c == "id"), ("FK", c in FK_COLS)) if ok)
+
+    def size(tid):
+        _, name, _, _, cols = T[tid]
+        w = max(tw(name) + 40, max(tw(f"+<<{keys(c)}>> {c} : {t}") for c, t, *_ in cols) + 16)
+        return w, HEAD + ROW * len(cols) + 12
+
+    for title, grid, fks in ERD_PARTS:
+        emit("DIAGRAM", "class", title)
+        ncol = max(len(r) for r in grid)
+        colw = [max((size(r[j])[0] for r in grid if j < len(r) and r[j]), default=0) for j in range(ncol)]
+        y = 20
+        for row in grid:
+            x, rowh = 20, 0
+            for j, tid in enumerate(row):
+                if tid:
+                    w, h = size(tid)
+                    _, name, _, _, cols = T[tid]
+                    emit("SHAPE", tid, "class", x, y, w, h, name, "<<table>>")
+                    for c, t, pk, nul in cols:
+                        emit("TATTR", tid, c, t, keys(c))
+                    rowh = max(rowh, h)
+                x += colw[j] + 110
+            y += rowh + 70
+        for a, b in fks:
+            emit("CONN", "rel", a, b, "1 : N")
+
+
+SITEMAP = [  # (id, page, functional requirement code and roles, parent)
+    ("login", "Login", "F01", None),
+    ("main", "Halaman Utama (menu samping sesuai role)", "F01, F14", "login"),
+    ("dash", "Dashboard Pemantauan", "F10: Supervisor, Administrator", "main"),
+    ("inbox", "Kotak Masuk", "F02, F04, F05, F07: Agen/CS", "main"),
+    ("pros", "Prospek", "F08: Agen/CS", "main"),
+    ("kont", "Kontak", "F03, F09: Agen/CS", "main"),
+    ("nomor", "Nomor WhatsApp", "F11: Administrator", "main"),
+    ("kb", "Basis Pengetahuan", "F12: Supervisor, Administrator", "main"),
+    ("ai", "Pengaturan AI dan Konsol Uji", "F13: Administrator", "main"),
+    ("risk", "Antrean Keluar dan Pusat Risiko", "F06: Administrator", "main"),
+    ("tim", "Tim dan Akses", "F14: Administrator", "main"),
+    ("log", "Log Audit", "F15: Supervisor, Administrator", "main"),
+    ("inbox2", "Detail Percakapan", "F07", "inbox"),
+    ("pros2", "Detail Prospek", "F08", "pros"),
+    ("kont2", "Form Ubah Kontak", "F09", "kont"),
+    ("nomor2", "Tautkan Nomor (Kode QR)", "F11", "nomor"),
+    ("kb2", "Form Artikel dan Uji Pencarian", "F12", "kb"),
+    ("tim2", "Form Pengguna dan Matriks Akses", "F14", "tim"),
+]
+
+
+def sitemap():
+    """Sitemap as a class diagram of <<page>> classes (web application extension notation)."""
+    emit("DIAGRAM", "class", "Sitemap SAPA")
+    # left-to-right tree so the figure fits a portrait page: Login -> Halaman Utama -> pages -> sub-pages
+    kids = [s for s in SITEMAP if s[3] == "main"]
+    step, bh = 74, 56
+    mid = 20 + (len(kids) - 1) * step // 2
+    emit("SHAPE", "login", "class", 20, mid, 150, bh, "Login\\n[F01]", "<<page>>")
+    emit("SHAPE", "main", "class", 220, mid, 230, bh, "Halaman Utama\\n(menu samping sesuai role)", "<<page>>")
+    emit("CONN", "assoc", "login", "main", "")
+    ys = {}
+    for k, (pid, name, code, _) in enumerate(kids):
+        y = 20 + k * step
+        ys[pid] = y
+        emit("SHAPE", pid, "class", 520, y, 290, bh, f"{name}\\n[{code}]", "<<page>>")
+        emit("CONN", "assoc", "main", pid, "")
+    for pid, name, code, parent in SITEMAP:
+        if parent not in ys:
+            continue
+        emit("SHAPE", pid, "class", 870, ys[parent], 270, bh, f"{name}\\n[{code}]", "<<page>>")
+        emit("CONN", "assoc", parent, pid, "")
+
+
 if __name__ == "__main__":
     which = sys.argv[2] if len(sys.argv) > 2 else "all"
+    if which in ("all", "srs"):
+        deployment_diagram()
+        erd()
+        sitemap()
+        scrum_activity()
     if which in ("all", "uc"):
         use_case_diagram()
     if which in ("all", "cd"):
-        class_diagram()
+        class_diagrams()
     if which in ("all", "sd"):
         sequences()
     if which in ("all", "ad"):

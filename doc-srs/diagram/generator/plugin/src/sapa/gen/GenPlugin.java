@@ -42,6 +42,7 @@ public class GenPlugin implements VPPlugin, VPPluginCommandLineSupport {
                     }
                 }
             }
+            flushTable();
             boolean ok = ApplicationManager.instance().getProjectManager().saveProjectAs(new File(args[1]));
             System.out.println("[sapa.gen] saved=" + ok + " -> " + args[1]);
         } catch (Throwable t) {
@@ -49,7 +50,22 @@ public class GenPlugin implements VPPlugin, VPPluginCommandLineSupport {
         }
     }
 
+    /** ERD tables are drawn only after their columns exist; otherwise the headless renderer shows empty tables. */
+    private Object[] pendingTable;
+
+    private void flushTable() {
+        if (pendingTable == null) return;
+        String id = (String) pendingTable[0];
+        int[] b = (int[]) pendingTable[1];
+        pendingTable = null;
+        IShapeUIModel s = (IShapeUIModel) dm.createDiagramElement(diagram, models.get(id));
+        s.setBounds(b[0], b[1], b[2], b[3]);
+        resetCaption(s);
+        shapes.put(id, s);
+    }
+
     private void exec(String[] p) {
+        if (!p[0].equals("COL")) flushTable();
         switch (p[0]) {
             case "DIAGRAM": diagram(p[1], p[2]); break;
             case "SHAPE": shape(p); break;
@@ -58,6 +74,8 @@ public class GenPlugin implements VPPlugin, VPPluginCommandLineSupport {
             case "OP": op(p[1], p[2], p.length > 3 ? p[3] : "", p.length > 4 ? p[4] : ""); break;
             case "CONN": conn(p); break;
             case "ACT": act(p[1], p[2], Integer.parseInt(p[3]), Integer.parseInt(p[4])); break;
+            case "TATTR": tattr(p[1], p[2], p[3], p.length > 4 ? p[4] : ""); break;
+            case "COL": col(p[1], p[2], p[3], p[4].equals("1"), p.length > 5 && p[5].equals("1")); break;
             default: System.out.println("[sapa.gen] unknown command " + p[0]);
         }
     }
@@ -69,6 +87,8 @@ public class GenPlugin implements VPPlugin, VPPluginCommandLineSupport {
             case "class": t = DiagramManager.DIAGRAM_TYPE_CLASS_DIAGRAM; break;
             case "sequence": t = DiagramManager.DIAGRAM_TYPE_INTERACTION_DIAGRAM; break;
             case "activity": t = DiagramManager.DIAGRAM_TYPE_ACTIVITY_DIAGRAM; break;
+            case "deployment": t = DiagramManager.DIAGRAM_TYPE_DEPLOYMENT; break;
+            case "erd": t = DiagramManager.DIAGRAM_TYPE_ENTITY_RELATIONSHIP_DIAGRAM; break;
             default: throw new IllegalArgumentException(type);
         }
         diagram = dm.createDiagram(t);
@@ -112,12 +132,45 @@ public class GenPlugin implements VPPlugin, VPPluginCommandLineSupport {
                 m = sl;
                 break;
             }
+            case "node": m = f.createNode(); break;
+            case "component": m = f.createComponent(); break;
+            case "artifact": m = f.createArtifact(); break;
+            case "dbtable": m = f.createDBTable(); break;
+            case "object": m = f.createActivityObject(); break;
             default: throw new IllegalArgumentException(kind);
         }
+        if (extra.equals("<<table>>")) {  // a table drawn in a second ERD reuses the model (VP forbids duplicate names)
+            IModelElement prev = tables.get(name);
+            if (prev != null) {
+                m = prev;
+                reused.add(id);
+                IShapeUIModel s = (IShapeUIModel) dm.createDiagramElement(diagram, m);
+                s.setBounds(x, y, w, h);
+                resetCaption(s);
+                models.put(id, m);
+                shapes.put(id, s);
+                return;
+            }
+            tables.put(name, m);
+        }
         m.setName(name);
+        if (extra.startsWith("<<")) {
+            try { m.getClass().getMethod("addStereotype", String.class).invoke(m, extra.substring(2, extra.length() - 2)); }
+            catch (Throwable t) { System.out.println("[sapa.gen] no stereotype on " + kind); }
+        }
+        if (kind.equals("dbtable")) {
+            models.put(id, m);
+            pendingTable = new Object[]{id, new int[]{x, y, w, h}};
+            return;
+        }
         IShapeUIModel s = (IShapeUIModel) dm.createDiagramElement(diagram, m);
         s.setBounds(x, y, w, h);
         if (kind.equals("system") || extra.equals("white")) s.getFillColor().setColor1(java.awt.Color.WHITE, true);
+        if (kind.equals("node")) s.getFillColor().setColor1(new java.awt.Color(0xEE, 0xF6, 0xFB), true);
+        if (kind.equals("class") && extra.equals("<<page>>")) {
+            try { s.getClass().getMethod("setShowEmptyCompartments", boolean.class).invoke(s, false); }
+            catch (Throwable t) { System.out.println("[sapa.gen] cannot hide compartments"); }
+        }
         resetCaption(s);
         models.put(id, m);
         shapes.put(id, s);
@@ -149,6 +202,44 @@ public class GenPlugin implements VPPlugin, VPPluginCommandLineSupport {
         IModelElement pm = models.get(parent), cm = models.get(child);
         if (pm instanceof IHasChildrenBaseModelElement) ((IHasChildrenBaseModelElement) pm).addChild(cm);
         shapes.get(parent).addChild(shapes.get(child));
+    }
+
+    /** COL table name type pk nullable : ERD column; type is the SQL type text shown in the table. */
+    private void col(String table, String name, String type, boolean pk, boolean nullable) {
+        IDBTable t = (IDBTable) models.get(table);
+        IDBColumn c = t.createDBColumn();
+        c.setName(name);
+        c.setPrimaryKey(pk);
+        c.setNullable(nullable);
+        try {
+            String base = type.replaceAll("\\(.*", "").toUpperCase();
+            if (base.equals("TEXT")) base = "LONGVARCHAR";
+            int code = java.sql.Types.class.getField(base).getInt(null);
+            c.setType(code);
+        } catch (Throwable e) {
+            System.out.println("[sapa.gen] type " + type + " not mapped: " + e);
+        }
+        java.util.regex.Matcher len = java.util.regex.Pattern.compile("\\((\\d+)\\)").matcher(type);
+        if (len.find()) c.setLength(Integer.parseInt(len.group(1)));
+    }
+
+    /** TATTR class column type [PK|FK|PK,FK] : table column in a class-notation data model. */
+    private final Map<String, IModelElement> tables = new HashMap<>();
+    private final Set<String> reused = new HashSet<>();
+
+    private void tattr(String cls, String name, String type, String key) {
+        if (reused.contains(cls)) return;
+        IClass c = (IClass) models.get(cls);
+        IAttribute a = f.createAttribute();
+        a.setName(name);
+        a.setVisibility("public");
+        try { a.getClass().getMethod("setType", Object.class).invoke(a, type); }
+        catch (Throwable t) {
+            try { a.getClass().getMethod("setType", String.class).invoke(a, type); }
+            catch (Throwable t2) { a.setName(name + " : " + type); }
+        }
+        for (String k : key.split(",")) if (!k.isEmpty()) a.addStereotype(k);
+        c.addAttribute(a);
     }
 
     private void attr(String cls, String name) {
@@ -197,6 +288,29 @@ public class GenPlugin implements VPPlugin, VPPluginCommandLineSupport {
                 IAssociation a = f.createAssociation();
                 a.setFrom(fm); a.setTo(tm);
                 rel = a;
+                break;
+            }
+            case "rel": {  // table relation: label such as "1 : N" shown mid-line (end multiplicities are mis-placed headless)
+                IAssociation a = f.createAssociation();
+                a.setFrom(fm); a.setTo(tm);
+                rel = a;
+                pts = parsePoints(p.length > 7 ? p[7] : "");
+                break;
+            }
+            case "fk": {
+                IDBForeignKey k = f.createDBForeignKey();
+                k.setFrom(fm); k.setTo(tm);
+                rel = k;
+                shown = "";
+                pts = parsePoints(p.length > 7 ? p[7] : "");
+                break;
+            }
+            case "objflow": {
+                IActivityObjectFlow o = f.createActivityObjectFlow();
+                o.setFrom(fm); o.setTo(tm);
+                rel = o;
+                shown = "";
+                pts = parsePoints(p.length > 7 ? p[7] : "");
                 break;
             }
             case "include": {

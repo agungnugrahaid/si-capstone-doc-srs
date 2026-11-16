@@ -4,6 +4,7 @@
 Final SRS for Capstone Project (Kelompok 1, 22D, SAPA for Bimbel Asentra), due 17 Nov 2026 at 20.00. Rebuilt from Rifqi's v1.0 draft as v1.1: Laravel stack, all diagrams in Visual Paradigm, prose in Agung's writing style, APA 7.
 
 ## Done (newest first)
+- 2026-11-17 (rev 4): new layered architecture diagram in VP (`Diagram Arsitektur Berlapis SAPA`, flat `rect` shapes, lecturer's layer format adapted to SAPA) as Gambar 4.1; deployment diagram is now Gambar 4.2. Copied to Drive at 03.39 (88 pages). Build tip: run the Word update on a local copy, then copy to Drive (Word hung on the Drive path).
 - 2026-11-17 (rev 3): NIDN printed as `NIDN. _____________`; Lampiran C trimmed to 6 technical items; MoM written as of 26 Sep with a separate 'Kebutuhan terkait' column; conflicts fixed (SRS moved from pra-sprint to Sprint 1, hak_akses = lihat/balas/kelola as in the mockup, Kontak/Tim mockup descriptions). `build_srs.py` takes an optional 2nd arg for the output path; `update_word.ps1` never quits a Word instance that still has documents open.
 - 2026-11-17 (rev 2): NIDN blank; interview 26 Sep 2026 with MoM tables in Lampiran B; Heroicons in Tabel 5.1; AD/SD-01..12 all in Bab IV (Lampiran D removed); every picture inside a bordered 1x1 table like the template.
 - 2026-11-17: SRS v1.1 built: `doc-srs/srs/isi_srs.py` (content), `build_srs.py` (fills P07 template), `update_word.ps1` (Word refreshes TOC/lists, exports PDF). Output goes to Drive, not the repo: `dev/cekula/capstone-project/SRS_SAPA_Kelompok1_v1.1.docx` + `.pdf` (87 pages, 31 tables, 43 figures).
@@ -12,7 +13,7 @@ Final SRS for Capstone Project (Kelompok 1, 22D, SAPA for Bimbel Asentra), due 1
 - 2026-11-17: writing profile v1.3 (Drive `Cekula/_writing-profile/writing-style.md`): APA 7 is the default citation style when a template allows a choice.
 
 ## In progress
-- Rev 3 is in Drive (docx + pdf, 17 Nov 03.07). Lampiran B MoM (26 Sep 2026) was reconstructed from the project plan; Yordan should confirm it with Greta.
+- Rev 4 is in Drive (docx + pdf, 17 Nov 03.39). Lampiran B MoM (26 Sep 2026) was reconstructed from the project plan; Yordan should confirm it with Greta.
 
 ## Next
 1. After any edit, rebuild: `python -I doc-srs/srs/build_srs.py`, then `powershell -ExecutionPolicy Bypass -File doc-srs/srs/update_word.ps1 "<docx path>"`.

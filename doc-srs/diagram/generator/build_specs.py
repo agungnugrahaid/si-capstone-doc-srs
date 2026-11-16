@@ -1005,8 +1005,41 @@ def sitemap():
         emit("CONN", "assoc", parent, pid, "")
 
 
+LAYERS = [  # top to bottom; each row is a list of (text, colour); a row with several cells is split evenly
+    [("SAPA: Sistem Asisten Pelanggan dan Akuisisi\\n(Aplikasi Sistem Informasi Terintegrasi)", "#8DB8F2")],
+    [("Web\\n(Blade + Tailwind CSS, untuk staf Asentra)", "#B4BED6"),
+     ("WhatsApp\\n(pelanggan, melalui WA Gateway)", "#B4BED6")],
+    [("Autentikasi dan RBAC per Nomor WhatsApp\\n(login email dan password, pembatasan percobaan login)", "#E3A3BC")],
+    [("Mesin AI\\n(RAG, FTS5, eskalasi)", "#CDBDEB"), ("Mesin Anti-ban\\n(antrean dan queue worker)", "#CDBDEB"),
+     ("WA Gateway\\n(Node.js, Baileys)", "#CDBDEB")],
+    [("OLTP\\n(kotak masuk, kontak, prospek, antrean pesan)", "#B4BED6"),
+     ("OLAP\\n(metrik harian dan dashboard)", "#B4BED6")],
+    [("Database dan Web Server\\n(Nginx + PHP-FPM 8.2 untuk Laravel 12, Node.js 22, SQLite + FTS5)", "#F4A9B5")],
+    [("Virtual Machine\\n(VPS Ubuntu 24.04 LTS, 2 vCPU, RAM 2 GB, SSD 40 GB)", "#9CF2F2")],
+    [("Hardware Virtualization\\n(hypervisor milik penyedia VPS)", "#A6DCFA")],
+    [("IT Hardware Infrastructure\\n(server fisik di data center penyedia VPS, AMD EPYC 9754)", "#FFF59A")],
+]
+
+
+def layered_architecture():
+    """Layered system diagram in the format the lecturer gave (stacked flat blocks, hardware at the bottom)."""
+    emit("DIAGRAM", "deployment", "Diagram Arsitektur Berlapis SAPA")
+    W, H, GAP, X = 900, 58, 6, 20
+    y = 20
+    for r, row in enumerate(LAYERS):
+        n = len(row)
+        cw = (W - GAP * (n - 1)) // n
+        for c, (text, colour) in enumerate(row):
+            x = X + c * (cw + GAP)
+            w = W - (n - 1) * (cw + GAP) if c == n - 1 else cw  # last cell absorbs rounding
+            emit("SHAPE", f"l{r}_{c}", "rect", x, y, w, H, text, colour)
+        y += H + GAP
+
+
 if __name__ == "__main__":
     which = sys.argv[2] if len(sys.argv) > 2 else "all"
+    if which in ("all", "srs", "layer"):
+        layered_architecture()
     if which in ("all", "srs"):
         deployment_diagram()
         erd()

@@ -137,6 +137,7 @@ public class GenPlugin implements VPPlugin, VPPluginCommandLineSupport {
             case "artifact": m = f.createArtifact(); break;
             case "dbtable": m = f.createDBTable(); break;
             case "object": m = f.createActivityObject(); break;
+            case "rect": m = f.createRectangle(); break;
             default: throw new IllegalArgumentException(kind);
         }
         if (extra.equals("<<table>>")) {  // a table drawn in a second ERD reuses the model (VP forbids duplicate names)
@@ -167,6 +168,10 @@ public class GenPlugin implements VPPlugin, VPPluginCommandLineSupport {
         s.setBounds(x, y, w, h);
         if (kind.equals("system") || extra.equals("white")) s.getFillColor().setColor1(java.awt.Color.WHITE, true);
         if (kind.equals("node")) s.getFillColor().setColor1(new java.awt.Color(0xEE, 0xF6, 0xFB), true);
+        if (extra.startsWith("#")) s.getFillColor().setColor1(java.awt.Color.decode(extra), true);
+        if (kind.equals("rect") && s instanceof com.vp.plugin.diagram.shape.IRectangleUIModel) {
+            ((com.vp.plugin.diagram.shape.IRectangleUIModel) s).setRoundedValue(0);  // sharp corners, like the course example
+        }
         if (kind.equals("class") && extra.equals("<<page>>")) {
             try { s.getClass().getMethod("setShowEmptyCompartments", boolean.class).invoke(s, false); }
             catch (Throwable t) { System.out.println("[sapa.gen] cannot hide compartments"); }

@@ -648,16 +648,29 @@ add("p", "Bab ini menyajikan model sistem dalam bentuk diagram. Seluruh diagram 
          "kebutuhan, alur, dan struktur sistem (Narulita dkk., 2024).")
 
 add("h2", "4.1 Arsitektur Sistem")
-add("p", "Arsitektur SAPA digambarkan dengan deployment diagram yang disusun berlapis, mengikuti model lapisan yang "
-         "diberikan pada perkuliahan. Susunan lapisan dari bawah ke atas adalah sebagai berikut.")
+add("p", "Arsitektur SAPA digambarkan dalam dua diagram. Diagram arsitektur berlapis pada {fig:berlapis} mengikuti model "
+         "lapisan yang diberikan pada perkuliahan, sedangkan deployment diagram pada {fig:arsitektur} merinci hubungan "
+         "antarkomponen.")
+add("fig", "berlapis", "Diagram Arsitektur Berlapis SAPA", PNG + "Diagram Arsitektur Berlapis SAPA.png",
+    "Setiap lapisan pada {fig:berlapis} bergantung pada lapisan di bawahnya. Penjelasan lapisan dari bawah ke atas "
+    "adalah sebagai berikut.")
 add("ol", [
-    "**Infrastruktur perangkat keras.** Server fisik milik penyedia VPS.",
-    "**Virtual machine.** VPS Ubuntu 24.04 LTS dengan 2 vCPU, RAM 2 GB, dan SSD 40 GB.",
-    "**Web server dan basis data.** Nginx dengan PHP-FPM 8.2, runtime Node.js 22 untuk WA Gateway, dan berkas SQLite.",
-    "**OLTP dan OLAP.** Modul OLTP mencatat transaksi harian berupa pesan, percakapan, kontak, dan prospek. Modul OLAP "
-    "merangkum metrik harian untuk dashboard.",
-    "**Autentikasi.** Login dan RBAC per nomor. Lapisan 2FA pada model perkuliahan tidak diterapkan (W01).",
-    "**Aplikasi.** Antarmuka web Blade yang dibuka melalui peramban.",
+    "**IT Hardware Infrastructure.** Server fisik di data center penyedia VPS dengan prosesor AMD EPYC 9754.",
+    "**Hardware Virtualization.** Hypervisor milik penyedia VPS yang membagi server fisik menjadi beberapa server "
+    "virtual.",
+    "**Virtual Machine.** VPS Ubuntu 24.04 LTS dengan 2 vCPU, RAM 2 GB, dan SSD 40 GB yang disewa untuk SAPA.",
+    "**Database dan Web Server.** Nginx dengan PHP-FPM 8.2 untuk Laravel 12, runtime Node.js 22 untuk WA Gateway, dan "
+    "berkas SQLite dengan FTS5.",
+    "**OLTP dan OLAP.** OLTP mencatat transaksi harian berupa pesan, percakapan, kontak, prospek, dan antrean pesan. "
+    "OLAP merangkum metrik harian untuk dashboard.",
+    "**Layanan.** Mesin AI menyusun jawaban dari basis pengetahuan, mesin anti-ban mengatur antrean pengiriman, dan WA "
+    "Gateway menghubungkan SAPA dengan WhatsApp Web. Lapisan ini tidak ada pada model perkuliahan dan ditambahkan "
+    "karena ketiga layanan tersebut merupakan inti SAPA.",
+    "**Autentikasi dan RBAC.** Login dengan email dan password, pembatasan percobaan login, serta akses per nomor "
+    "WhatsApp. Two-factor authentication pada model perkuliahan tidak diterapkan pada rilis ini (W01).",
+    "**Platform.** Staf memakai aplikasi web, sedangkan pelanggan berinteraksi melalui WhatsApp. Aplikasi desktop dan "
+    "mobile tidak dibuat (W05).",
+    "**Aplikasi.** SAPA sebagai sistem informasi terintegrasi untuk Bimbingan Belajar Asentra.",
 ])
 add("fig", "arsitektur", "Deployment Diagram Arsitektur SAPA", PNG + "Deployment Diagram Arsitektur SAPA.png",
     "Pada {fig:arsitektur}, pengguna membuka SAPA melalui HTTPS. Aplikasi Laravel memanggil WA Gateway melalui HTTP "

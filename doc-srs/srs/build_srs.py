@@ -121,8 +121,8 @@ nama = {n.split()[0]: n for n, _ in ID["anggota"]}
 REV = [
     ["1.0", "16/11/2026", "Seluruh dokumen", "Draf awal SRS disusun dari laporan ASN1 dan perencanaan sprint Scrum.",
      nama["Rifqi"]],
-    ["1.1", "17/11/2026", "Seluruh dokumen", "Penyesuaian ke Laravel 12 dan WA Gateway; arsitektur berlapis "
-     "(deployment diagram), ERD, dan sitemap baru; seluruh diagram dibangun ulang di Visual Paradigm; 2FA ditetapkan "
+    ["1.1", "17/11/2026", "Seluruh dokumen", "Penyesuaian ke Laravel 12 dan WA Gateway; diagram arsitektur "
+     "berlapis, deployment diagram, ERD, dan sitemap baru; seluruh diagram dibangun ulang di Visual Paradigm; 2FA ditetapkan "
      "Won't have; activity dan sequence diagram kedua belas use case di Bab IV; "
      "kebutuhan non-fungsional ditambah; sitasi APA 7.", nama["Agung"]],
 ]
